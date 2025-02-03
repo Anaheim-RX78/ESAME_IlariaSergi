@@ -177,8 +177,8 @@ void AMainCharacter::SetMovementInput(const FVector2D& MovementInput)
 
 void AMainCharacter::SetLookUpInput(const FVector2D& LookUpInput)
 {
-	AddControllerPitchInput(LookUpInput.X);
-	AddControllerYawInput(LookUpInput.Y);
+	AddControllerPitchInput(LookUpInput.Y);
+	AddControllerYawInput(LookUpInput.X);
 }
 void AMainCharacter::SetLastMushroomSeconds(float NewLastMushroomSeconds)
 {
