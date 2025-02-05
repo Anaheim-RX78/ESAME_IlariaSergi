@@ -19,11 +19,8 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category= "Score");
 	int PlayerScore=0;
 	
-	//UPROPERTY(EditAnywhere,Category=score)
-	//float MaxDepth= 0;
-
-	UPROPERTY(BlueprintReadOnly,EditAnywhere, Category= "Score");
-	float LevelTime=20;
+	UPROPERTY(BlueprintReadWrite,EditAnywhere, Category= "Score");
+	float LevelTime=300;
 	
 	UPROPERTY(EditAnywhere,Category=score)
 	int Attempts= 0;

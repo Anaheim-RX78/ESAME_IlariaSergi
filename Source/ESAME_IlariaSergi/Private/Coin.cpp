@@ -34,7 +34,7 @@ void ACoin::UpdateScore()
 	UGameInstance* Instance = UGameplayStatics::GetGameInstance(GetWorld());
 	UDropperGameInstance* DropperInstance = Cast<UDropperGameInstance>(Instance);
 	ScoreManager->AddToScore(value, DropperInstance);
-	GEngine-> AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::Printf(TEXT("TOTAL POINTS: %d"), DropperInstance -> PlayerScore));
+	//GEngine-> AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::Printf(TEXT("TOTAL POINTS: %d"), DropperInstance -> PlayerScore));
 	
 }
 

@@ -46,7 +46,6 @@ public:
 	//fvector per sapere dove droppare
 	void DropItem(UInventoryItemData* Item, int Amount, FVector Location);
 	
-
 	FInventorySlot* GetSlotByData(UInventoryItemData* Item);
 
 	UFUNCTION(blueprintCallable, Category="Inventory")

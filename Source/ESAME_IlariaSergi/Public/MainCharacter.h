@@ -25,12 +25,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category=Movement)
 	float Speed =500.0f;
 	
-	float InitialSpeed;
-
-	FVector InitialLocation;
-	
-    float LastMushroomSeconds;
-	
 	UPROPERTY(EditAnywhere, Category=Movement)
 	float JumpForce= 1000.0f;
 	
@@ -39,19 +33,31 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category=Camera)
 	USpringArmComponent* SpringArm;
-
-	UPROPERTY(EditAnywhere, Category=Inventory)
-	UInventory* Inventory;
-
+	
 	UPROPERTY(EditAnywhere, Category=Interaction)
 	UPlayerInteractionComponent* InteractionComponent;
-
-	//Gestione timer per tempo di gioco
-	float InitialLevelTime;
-	bool TimeOutShowing;
-	FTimerHandle MovementTimerHandle;
 	
 	int antidoti;
+	
+	float InitialSpeed;
+
+	FVector InitialLocation;
+	
+	//da decrementare a ogni tick fino a quando diventa zero
+	//quando arriva zero rimposto la initalspeed
+	float LastMushroomSeconds;
+	
+	//Gestione timer per tempo di gioco
+	
+	//tempo del livello che prendo dalla game instance
+	//da decrementare ongi tick
+	float InitialLevelTime;
+	
+	//true quando il tempo scade e mostro il messaggio di game over
+	bool TimeOutShowing;
+	
+	//timer di 5 secondi dopo il game over prima di ripartire
+	FTimerHandle MovementTimerHandle;
 	
 	virtual void BeginPlay() override;
 	void Tick(float DeltaTime);
@@ -60,7 +66,6 @@ protected:
     void Respawn();
 
 	void InitGame();
-	
 
 public:
 	float GetSpeed();
@@ -71,13 +76,12 @@ public:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//chiamata bp sulla lcukybox
 	UFUNCTION(BlueprintCallable)
 	void PrendiAntidoto();
 	
+	//reimposta initialspeed e lastmushroomseconds=0
 	void InvalidateMushroomEffect();
-
-	//UFUNCTION(BlueprintImplementableEvent)
-	//void ShowWidget();
 	
 	void SetMovementInput(const FVector2D& MovementInput);
 	void SetLookUpInput(const FVector2D& LookUpInput);

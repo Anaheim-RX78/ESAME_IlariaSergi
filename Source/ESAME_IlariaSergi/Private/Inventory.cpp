@@ -70,6 +70,7 @@ FInventorySlot* UInventory::GetSlotByData(UInventoryItemData* Item)
 
 FInventorySlot UInventory::GetRandomSlot()
 {
+	//l'indice massimo che posso estrarre è di num(dimensione array)-1
 	int maxIndex = Items.Num()-1;
 	int randomIndex =  UKismetMathLibrary::RandomIntegerInRange(0, maxIndex);
 	return Items[randomIndex];

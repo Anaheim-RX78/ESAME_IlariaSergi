@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "LuckyBox.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -33,6 +35,15 @@ bool ALuckyBox::GetActivated()
 void ALuckyBox::SetActivated(bool b)
 {
 	activated = b;
+}
+
+void ALuckyBox::UpdateScore(int value)
+{
+	UGameInstance* Instance = UGameplayStatics::GetGameInstance(GetWorld());
+	UDropperGameInstance* DropperInstance = Cast<UDropperGameInstance>(Instance);
+	ScoreManager->AddToScore(value, DropperInstance);
+	//GEngine-> AddOnScreenDebugMessage(-1, 5, FColor::Red, FString::Printf(TEXT("TOTAL POINTS: %d"), DropperInstance -> PlayerScore));
+	
 }
 
 /*int ALuckyBox::getRandomItem()

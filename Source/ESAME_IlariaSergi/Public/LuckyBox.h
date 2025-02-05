@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ScoreManagerComponent.h"
 #include "GameFramework/Actor.h"
 #include "LuckyBox.generated.h"
 
@@ -21,7 +22,12 @@ protected:
 	
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool activated;
+	
+	UScoreManagerComponent* ScoreManager;
 
+	UFUNCTION(BlueprintCallable)
+	void UpdateScore(int value);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

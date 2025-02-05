@@ -24,9 +24,6 @@ AMainCharacter::AMainCharacter()
 	SpringArm-> TargetArmLength = 500.0f;
 	SpringArm-> bUsePawnControlRotation = true;
 	
-	//creazione dell'inventario 
-	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
-	
 	//creazione della camera
 	Camera=CreateDefaultSubobject<UCameraComponent>(TEXT("camera"));
 	Camera->SetupAttachment(SpringArm,USpringArmComponent::SocketName);
@@ -34,7 +31,6 @@ AMainCharacter::AMainCharacter()
 	InteractionComponent= CreateDefaultSubobject<UPlayerInteractionComponent>(TEXT("PlayerInteraction"));
 	InteractionComponent->SetupAttachment(Camera);
 }
-
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
@@ -50,22 +46,20 @@ void AMainCharacter::BeginPlay()
 	//recupero la posizione iniziale per reimpostarla dopo il time out
 	InitialLocation = GetActorLocation();
 
+	InitialSpeed=Speed;
+	
 	//resetto la game instance e il movimento del player
 	InitGame();
 	   
 }
-
-
+//funzione chiamata anche dopo il game over
 void AMainCharacter::InitGame()
 {
-
 	//imposto il movimento al character
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	//rimetto l'actor sulla posizione iniziale di gioco
 	SetActorLocation(InitialLocation);
 	
-	InitialSpeed=Speed;
-
 	TimeOutShowing = false;
 
 	//resetto la game instance
@@ -75,7 +69,7 @@ void AMainCharacter::InitGame()
 	if (DropperInstance)
 	{
 		//DropperInstance->MaxDepth = FMath::RandRange(0.0f, 1000.0F);
-		DropperInstance -> Attempts = 0;
+		//DropperInstance -> Attempts = 0;
 		DropperInstance -> PlayerScore = 0;
 		DropperInstance -> LevelTime = InitialLevelTime;
 		DropperInstance -> LastCheckpointPosition = InitialLocation;
@@ -97,11 +91,13 @@ void AMainCharacter::Tick(float DeltaTime)
 	DropperInstance->LevelTime -= DeltaTime;
 
 	//quando finisco il tempo, se non sto mostrando il timeout
+	//è vera solo al primo tick sul 0
 	if (DropperInstance->LevelTime <= 0 && !TimeOutShowing)
 	{
 		GEngine-> AddOnScreenDebugMessage(-1, 5, FColor::Red, "TIME OUT");
 		TimeOutShowing = true;
 		GetCharacterMovement()->DisableMovement();
+		//imposto un timer di 5 secondi qunado scade invoco initgame
 		GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AMainCharacter::InitGame, 5.0f, false);
 	}
 
@@ -116,8 +112,6 @@ void AMainCharacter::Tick(float DeltaTime)
 			LastMushroomSeconds = 0;
 			Speed = InitialSpeed;
 		}
-
-		
 		MovementComponent->MaxWalkSpeed = Speed;
 		
 	}
@@ -137,7 +131,6 @@ void AMainCharacter::SetSpeed(float NewSpeed)
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 void AMainCharacter::PrendiAntidoto()
@@ -157,6 +150,7 @@ void AMainCharacter::InvalidateMushroomEffect()
 
 void AMainCharacter:: Respawn()
 {
+	SetSpeed(InitialSpeed);
 	UGameInstance* Instance =UGameplayStatics::GetGameInstance(GetWorld());
 	UDropperGameInstance* DropperInstance = Cast<UDropperGameInstance>(Instance);
 	if (DropperInstance && DropperInstance -> LastCheckpointPosition!=InitialLocation)
@@ -171,8 +165,12 @@ void AMainCharacter:: Respawn()
 
 void AMainCharacter::SetMovementInput(const FVector2D& MovementInput)
 {
-	AddMovementInput(GetActorForwardVector(),MovementInput.Y);
-	AddMovementInput(GetActorRightVector(),MovementInput.X);
+	//AddMovementInput(GetActorForwardVector(),MovementInput.Y);
+	//AddMovementInput(GetActorRightVector(),MovementInput.X);
+	
+	AddMovementInput(FRotationMatrix(FRotator(0, GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::Y), MovementInput.X);
+	AddMovementInput(FRotationMatrix(FRotator(0, GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::X), MovementInput.Y);
+	
 }
 
 void AMainCharacter::SetLookUpInput(const FVector2D& LookUpInput)
